@@ -65,13 +65,14 @@ let TaxCalculator = class TaxCalculator {
   calculateTax(vehicle, toggle) {
     let tax = 0;
     let em = vehicle.co2Emissions;
-
+    if (toggle == undefined){
+      toggle = {cheap: false}
+    }
     
 
     if (vehicle.fuelType === "Petrol"){
-      console.log(vehicle, toggle);
-      if (toggle == true && vehicle.dateOfFirstRegistration.getFullYear() < this.getYear()){
-        console.log('HERE');
+      if (toggle.cheap == true && vehicle.dateOfFirstRegistration.getFullYear() < this.getYear()){
+        
         return 140;
       } else {
         for (let taxRate of PETROL_TAXES) {
