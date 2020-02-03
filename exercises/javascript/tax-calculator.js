@@ -17,6 +17,22 @@ const PETROL_TAXES = [
   TaxBand(256, Infinity, 2070),
 ]
 
+const DIESEL_TAXES = [
+  TaxBand(1, 50, 25),
+  TaxBand(51, 75, 105),
+  TaxBand(76, 90, 125),
+  TaxBand(91, 100, 145),
+  TaxBand(101, 110, 165),
+  TaxBand(111, 130, 205),
+  TaxBand(131, 150, 515),
+  TaxBand(151, 170, 830),
+  TaxBand(171, 190, 1240),
+  TaxBand(191, 225, 1760),
+  TaxBand(226, 255, 2070),
+  TaxBand(256, Infinity, 2070),
+]
+
+
 const ALTERNATIVE_FUELS = [
   TaxBand(0, 50, 0),
   TaxBand(51, 75, 15),
@@ -49,13 +65,20 @@ let TaxCalculator = class TaxCalculator {
   calculateTax(vehicle) {
     let tax = 0;
     let em = vehicle.co2Emissions;
-    if(vehicle.fuelType === 'Petrol') {
+
+    if (vehicle.fuelType === "Petrol"){
       for (let taxRate of PETROL_TAXES) {
-        if (em  >= taxRate.min && em <= taxRate.max){
+       if  (em  >= taxRate.min && em <= taxRate.max){
           tax = taxRate.tax;
           break;
-          }
-       }
+        }
+      }
+    } else if (vehicle.fuelType === "Diesel"){
+      for (let taxRate of DIESEL_TAXES) {
+        if  (em  >= taxRate.min && em <= taxRate.max){
+           tax = taxRate.tax;
+           break;
+        }
       } else if(vehicle.fuelType === 'Alternative fuel') {
         for (let taxRate of ALTERNATIVE_FUELS) {
           if (em  >= taxRate.min && em <= taxRate.max){
@@ -65,7 +88,8 @@ let TaxCalculator = class TaxCalculator {
          }
       }
     return tax;
+    }
   }
-}
+
 
 module.exports = { TaxCalculator: TaxCalculator };
