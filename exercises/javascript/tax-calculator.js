@@ -62,24 +62,33 @@ let TaxCalculator = class TaxCalculator {
     return this.year;
   }
 
-  calculateTax(vehicle) {
+  calculateTax(vehicle, toggle) {
     let tax = 0;
     let em = vehicle.co2Emissions;
 
+    
+
     if (vehicle.fuelType === "Petrol"){
-      for (let taxRate of PETROL_TAXES) {
-       if  (em  >= taxRate.min && em <= taxRate.max){
-          tax = taxRate.tax;
-          break;
+      console.log(vehicle, toggle);
+      if (toggle == true && vehicle.dateOfFirstRegistration.getFullYear() < this.getYear()){
+        console.log('HERE');
+        return 140;
+      } else {
+        for (let taxRate of PETROL_TAXES) {
+          if  (em  >= taxRate.min && em <= taxRate.max){
+            tax = taxRate.tax;
+            break;
+          }
         }
-      }
+      } 
     } else if (vehicle.fuelType === "Diesel"){
       for (let taxRate of DIESEL_TAXES) {
         if  (em  >= taxRate.min && em <= taxRate.max){
            tax = taxRate.tax;
            break;
         }
-      } else if(vehicle.fuelType === 'Alternative fuel') {
+      }
+     } else if(vehicle.fuelType === 'Alternative fuel') {
         for (let taxRate of ALTERNATIVE_FUELS) {
           if (em  >= taxRate.min && em <= taxRate.max){
             tax = taxRate.tax;
