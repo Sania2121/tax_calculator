@@ -32,6 +32,9 @@ const DIESEL_TAXES = [
   TaxBand(256, Infinity, 2070),
 ]
 
+const ELECTRIC_TAXES = [
+  TaxBand(0, Infinity, 0)
+]
 
 const ALTERNATIVE_FUELS = [
   TaxBand(0, 50, 0),
@@ -66,7 +69,7 @@ let TaxCalculator = class TaxCalculator {
     let tax = 0;
     let em = vehicle.co2Emissions;
     if (toggle == undefined){
-      toggle = {cheap: false}
+      toggle = {cheap: false, expensive: false}
     }
     
 
@@ -74,7 +77,9 @@ let TaxCalculator = class TaxCalculator {
       if (toggle.cheap == true && vehicle.dateOfFirstRegistration.getFullYear() < this.getYear()){
         
         return 140;
-      } else {
+      } else if (toggle.expensive == true && vehicle.dateOfFirstRegistration.getFullYear() < this.getYear()) {
+        return 450
+      } else { 
         for (let taxRate of PETROL_TAXES) {
           if  (em  >= taxRate.min && em <= taxRate.max){
             tax = taxRate.tax;
@@ -82,21 +87,40 @@ let TaxCalculator = class TaxCalculator {
           }
         }
       } 
-    } else if (vehicle.fuelType === "Diesel"){
+    } 
+    
+    if (vehicle.fuelType === "Diesel"){ 
       for (let taxRate of DIESEL_TAXES) {
         if  (em  >= taxRate.min && em <= taxRate.max){
            tax = taxRate.tax;
            break;
         }
-      }
-     } else if(vehicle.fuelType === 'Alternative fuel') {
-        for (let taxRate of ALTERNATIVE_FUELS) {
+      } 
+      // need a new else if here for electric cars 
+
+     } 
+     
+     if(vehicle.fuelType === 'Alternative fuel') { 
+        if(toggle.expensive == true && vehicle.dateOfFirstRegistration.getFullYear() < this.getYear()) {
+          return 440        
+        } else if (toggle.cheap == true && vehicle.dateOfFirstRegistration.getFullYear() < this.getYear()){
+        
+          return 130;
+        }
+          for (let taxRate of ALTERNATIVE_FUELS) {
           if (em  >= taxRate.min && em <= taxRate.max){
             tax = taxRate.tax;
             break;
             }
          }
       }
+
+      if(vehicle.fuelType === 'Electric') {
+        if(toggle.expensive == true && vehicle.dateOfFirstRegistration.getFullYear() < this.getYear()) {
+          return 310
+        }
+      }
+
     return tax;
     }
   }

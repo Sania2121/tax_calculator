@@ -17,8 +17,9 @@ describe('Tax calculator on vehicles after the first year', () => {
     expect(taxCalculator.calculateTax(vehicle)).toBe(0);
   })
 
-  it.skip('subsequent years tax for alternative fuel', () => {
+  it('subsequent years tax for alternative fuel', () => {
+    let toggle = {cheap: true}
     const vehicle = new Vehicle(206, FuelType.ALTERNATIVE_FUEL, FIRST_OF_APRIL_2017, 20000);
-    expect(taxCalculator.calculateTax(vehicle)).toBe(130);
+    expect(taxCalculator.calculateTax(vehicle, toggle)).toBe(130);
   })
 })
